@@ -1,28 +1,51 @@
-import { useState } from "react"
-import OfficeForm from "../components/forms/OfficeForm"
+import axios from "axios"
+import { useForm } from "react-hook-form"
+import { dataServiceURL } from "../const"
+import CreateButton from "../components/buttons/CreateButton"
 
 function CreateSpace() {
-  const [currentStep, setCurrentStep] = useState(1)
+  const { register, handleSubmit } = useForm({
+    defaultValues: {
+        spaceName: ""
+    }
+  })
+
+  async function createSpace(data: { spaceName: string }){
+    try{
+        // axios.post(`${dataServiceURL}/spaces`, {
+        //     headers: {
+        //         "Authorization": `Bearer ${"test"}`,
+        //         "Content-Type": "application/json"
+        //     },
+        //     data: {
+        //         spaceName: data.spaceName
+        //     }
+        // })
+
+        console.log(data.spaceName)
+    }catch(error){
+
+    }
+  }
 
   return (
-    <div>
+    <div className="flex flex-col items-center">
         <h1 className="text-2xl font-bold text-center mb-[5vh]">Create Space</h1>
 
-        <div className="flex flex-col items-center w-full">
-            <ul className="w-full steps max-w-[700px]">
-                <li className={`step ${currentStep >= 1 ? "step-primary": ""}`}>Office</li>
-                <li className={`step ${currentStep >= 2 ? "step-primary": ""}`}>Floors</li>
-                <li className={`step ${currentStep >= 3 ? "step-primary": ""}`}>Rooms</li>
-                <li className={`step ${currentStep >= 4 ? "step-primary": ""}`}>Devices</li>
-            </ul>
+         <form onSubmit={handleSubmit(createSpace)}>
+            <label className="w-full max-w-xs form-control">
+                <div className="label">
+                    <span className="label-text">Space name</span>
+                </div>
+                <input
+                {...register("spaceName")} 
+                type="text" 
+                placeholder="Type here" 
+                className="w-full max-w-xs input input-bordered" />
+            </label>
 
-            <div className="mt-[5vh] w-full flex justify-center">
-                {currentStep === 1 && <OfficeForm officeName="" setCurrentStep={setCurrentStep} />}
-                {currentStep === 2 && <OfficeForm officeName="" setCurrentStep={setCurrentStep} />}
-                {currentStep === 3 && <OfficeForm officeName="" setCurrentStep={setCurrentStep} />}
-                {currentStep === 4 && <OfficeForm officeName="" setCurrentStep={setCurrentStep} />}
-            </div>
-        </div>        
+            <CreateButton text="Create space" />
+         </form>
     </div>
   )
 }

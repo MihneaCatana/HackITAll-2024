@@ -1,4 +1,4 @@
-import { Office } from "./office";
+import { Office } from "./space";
 
 export interface User {
     id: number,

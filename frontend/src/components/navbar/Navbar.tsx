@@ -22,7 +22,7 @@ function Navbar() {
                 <Outlet />
             </div>
         </div> 
-        <div className="drawer-side">
+        <div className="z-10 drawer-side">
             <label htmlFor="sidebar" aria-label="close sidebar" className="drawer-overlay"></label>
             <ul className="flex items-center justify-center w-64 min-h-full p-4 text-lg menu bg-base-200 text-base-content">
                 <Link to={`/dashboard`}>
@@ -37,8 +37,8 @@ function Navbar() {
                     <li className="hover:text-blue-500">Create space</li>    
                 </Link>
 
-                <Link to={`/edit-space`}>
-                    <li className="hover:text-blue-500">Edit space</li>
+                <Link to={`/add-device`}>
+                    <li className="hover:text-blue-500">Add device</li>    
                 </Link>
                 
                 <Link to={`/subscription`}>
