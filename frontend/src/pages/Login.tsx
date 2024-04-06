@@ -14,7 +14,7 @@ export const Login = () => {
     function sendInfo() {
 
         let nrError = "";
-
+        console.log(email)
         if (email.length < 1 || !/^[a-zA-Z0-9_.+-]+@gmail\.com$/.test(email)) {
             toast.error('Invalid email!', {
                 position: "top-right",
