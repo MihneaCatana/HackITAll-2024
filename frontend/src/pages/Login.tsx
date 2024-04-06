@@ -1,6 +1,7 @@
 import {useState} from "react";
 import {toast, ToastContainer} from "react-toastify";
 import {useNavigate} from "react-router-dom";
+import Axios from "axios";
 
 export const Login = () => {
 
@@ -42,26 +43,52 @@ export const Login = () => {
             nrError += ' password_err ';
         }
 
-        if (nrError.length) {
-            throw new Error('You have errors: ' + nrError)
-        }
+        if (nrError.length == 0) {
+            if (!registerMode) {
+                Axios.post("http://localhost:8081/auth/login", {
+                    email: email,
+                    password: password
+                }).then((res) => {
+                    localStorage.setItem("email", res.data.email)
+                    localStorage.setItem("token", res.data.token)
+                    navigate("/homepage");
+                }).catch((err) => {
+                    console.error(err)
+                    toast.error('Invalid credentials!', {
+                        position: "top-right",
+                        autoClose: 5000,
+                        hideProgressBar: true,
+                        closeOnClick: true,
+                        pauseOnHover: true,
+                        draggable: false,
+                        progress: undefined,
+                        theme: "colored",
+                    })
+                })
+            } else {
+                Axios.post("http://localhost:8081/auth/register", {
+                    email: email,
+                    password: password
+                }).then((res) => {
+                    localStorage.setItem("email", res.data.email)
+                    localStorage.setItem("token", res.data.token)
+                    navigate("/homepage");
+                }).catch((err) => {
+                    console.error(err)
+                    toast.error('Invalid credentials!', {
+                        position: "top-right",
+                        autoClose: 5000,
+                        hideProgressBar: true,
+                        closeOnClick: true,
+                        pauseOnHover: true,
+                        draggable: false,
+                        progress: undefined,
+                        theme: "colored",
+                    })
+                })
+            }
 
-        try {
-            navigate("/homepage");
-        } catch (err) {
-            console.error(err)
-            toast.error('Invalid credentials!', {
-                position: "top-right",
-                autoClose: 5000,
-                hideProgressBar: true,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: false,
-                progress: undefined,
-                theme: "colored",
-            })
         }
-
     }
 
     return (
