@@ -8,6 +8,7 @@ import {Management} from "./pages/Management.tsx";
 import Dashboard from "./pages/Dashboard.tsx";
 import {Route, Routes} from "react-router-dom";
 import CreateDevice from "./pages/CreateDevice.tsx";
+import {Test} from "./pages/Test.tsx";
 
 function App() {
     return (
@@ -19,8 +20,9 @@ function App() {
                     <Route path="/dashboard" element={<Dashboard/>}/>
                     <Route path="/management" element={<Management/>}/>
                     <Route path="/create-space" element={<CreateSpace/>}/>
-                    <Route path="/add-device" element={<CreateDevice />} />
+                    <Route path="/add-device" element={<CreateDevice/>}/>
                     <Route path="/subscription" element={<Subscription/>}/>
+                    <Route path="/test" element={<Test/>}/>
                     <Route path="*" element={<>404 Error</>}/>
                 </Route>
             </Routes>
