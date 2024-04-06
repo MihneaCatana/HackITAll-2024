@@ -5,7 +5,7 @@ import CreateSpace from "./pages/CreateSpace.tsx";
 import {Login} from "./pages/Login.tsx";
 import {Subscription} from "./pages/Subscription.tsx";
 import {Management} from "./pages/Management.tsx";
-import {Dashboard} from "./pages/Dashboard.tsx";
+import Dashboard from "./pages/Dashboard.tsx";
 import {Route, Routes} from "react-router-dom";
 import CreateDevice from "./pages/CreateDevice.tsx";
 
