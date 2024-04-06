@@ -44,6 +44,7 @@ function Dashboard() {
   }
 
   function onEndDateChange(endDate: Date){
+    endDate.setDate(endDate.getDate() + 1)
     setEndDate(endDate);
   }
 
