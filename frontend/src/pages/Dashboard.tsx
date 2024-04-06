@@ -20,7 +20,7 @@ function Dashboard() {
   const [endDate, setEndDate] = useState<Date | null>(null);
 
   useEffect(() => {
-    setSelectedSpace(DUMMY_SPACES[0].spaceName)
+    setSelectedSpace(DUMMY_SPACES[0].name)
   }, [])
 
   useEffect(() => {
@@ -65,7 +65,7 @@ function Dashboard() {
             className="w-full max-w-xs select select-bordered"
             >
                 {DUMMY_SPACES.map((space) => {
-                    return <option key={space.id} value={space.spaceName}>{space.spaceName}</option>
+                    return <option key={space.id} value={space.name}>{space.name}</option>
                 })}
             </select>
         </label>
@@ -101,7 +101,6 @@ function Dashboard() {
         data={dashboardData}
         index="date"
         categories={["Consumption"]}
-        colors={["blue"]}
         yAxisWidth={60}
         onValueChange={(v) => console.log(v)}
         />
