@@ -19,5 +19,47 @@ export const spaces: Space[] = [{
             timestamp: 1612406842
         }
     ]
+},
+{
+    id: 2,
+    spaceName: "Space 2",
+    devices: [
+        {
+            id: 1,
+            deviceName: "Refrigetator",
+            status: false,
+            consumption: 0,
+            timestamp: 1712406842
+        },
+        {
+            id: 2,
+            deviceName: "Light Bulb",
+            status: true,
+            consumption: 16,
+            timestamp: 1612406842
+        }
+    ]
 
-}]
+},
+{
+    id: 3,
+    spaceName: "Space 3",
+    devices: [
+        {
+            id: 1,
+            deviceName: "Refrigetator",
+            status: false,
+            consumption: 0,
+            timestamp: 1712406842
+        },
+        {
+            id: 2,
+            deviceName: "Light Bulb",
+            status: true,
+            consumption: 16,
+            timestamp: 1612406842
+        }
+    ]
+
+}
+]
