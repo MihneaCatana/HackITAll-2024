@@ -1,5 +1,5 @@
 export interface Device {
-    id: number,
+    id?: number,
     deviceName: string,
     consumption: number,
     status?: boolean,
