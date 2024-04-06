@@ -1,28 +1,54 @@
 import { spaces as DUMMY_SPACES } from "../data/mockOfficev2";
+import { mockDataDashboard } from "../data/mockDevices";
 import { useEffect, useState } from "react";
 import { Space } from "../types/space";
 import DatePicker from "react-datepicker"
 import 'react-datepicker/dist/react-datepicker.css';
+import { LineChart } from "@tremor/react";
 
+interface RealtimeData {
+    date: string
+    consumption: number,
+}
 
 function Dashboard() {
   const [spaces, setSpaces] = useState<Space[]>([])
-  const [selectedSpaceID, setSelectedSpaceID] = useState<number>()
+  const [selectedSpace, setSelectedSpace] = useState<string>()
+  const [dashboardData, setDashboardData] = useState<RealtimeData[]>([])
 
   const [startDate, setStartDate] = useState<Date | null>(null);
   const [endDate, setEndDate] = useState<Date | null>(null);
 
   useEffect(() => {
-    setSelectedSpaceID(DUMMY_SPACES[0].id)
+    setSelectedSpace(DUMMY_SPACES[0].spaceName)
   }, [])
+
+  useEffect(() => {
+    const intervalData = mockDataDashboard.filter((mockData) => {
+        const deviceDate = new Date(mockData.timestamp * 1000)
+
+        return deviceDate >= startDate! && deviceDate <= endDate! 
+    })
+
+    const dataPoints = intervalData.map((dataPoint) => {
+        return {
+            date: new Date(dataPoint.timestamp * 1000).toDateString(),
+            consumption: dataPoint.consumption
+        }
+    })
+    setDashboardData(dataPoints)
+  }, [startDate, endDate, selectedSpace])
 
   function onStartDateChange(startDate: Date){
     setStartDate(startDate);
   }
 
   function onEndDateChange(endDate: Date){
+    endDate.setDate(endDate.getDate() + 1)
     setEndDate(endDate);
   }
+
+  console.log(dashboardData)
 
   return (
     <div className="flex flex-wrap items-end justify-evenly">
@@ -33,13 +59,13 @@ function Dashboard() {
 
             <select
             onChange={(event) => {
-                const spaceID = Number(event.target.value)
-                setSelectedSpaceID(spaceID)}
+                const spaceName = event.target.value
+                setSelectedSpace(spaceName)}
             }
             className="w-full max-w-xs select select-bordered"
             >
                 {DUMMY_SPACES.map((space) => {
-                    return <option key={space.id} value={space.id}>{space.spaceName}</option>
+                    return <option key={space.id} value={space.spaceName}>{space.spaceName}</option>
                 })}
             </select>
         </label>
@@ -70,7 +96,15 @@ function Dashboard() {
             />
         </div>
 
-        <button className="btn btn-primary">View consumption</button>
+        <LineChart 
+        className="h-80"
+        data={dashboardData}
+        index="date"
+        categories={["Consumption"]}
+        colors={["blue"]}
+        yAxisWidth={60}
+        onValueChange={(v) => console.log(v)}
+        />
     </div>
   )
 }
