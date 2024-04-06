@@ -1,11 +1,21 @@
-import {useEffect, useState} from "react";
+import {useEffect, useRef, useState} from "react";
 import {Space} from "../types/space.ts";
 import Axios from "axios";
 import {dataServiceURL} from "../const.ts";
+import {EnergyEvent} from "../types/energyEvent.ts";
+
+function getLatestConsumptionEvent(events: EnergyEvent[], spaceNameSelected: string, nameDevice: string) {
+    const devicesSpace = events.filter(event => event.space === spaceNameSelected);
+    const deviceEvents = devicesSpace.filter(event => event.name === nameDevice);
+    return deviceEvents[deviceEvents.length - 1]?.consumption
+}
 
 export const Management = () => {
     const [spaces, setSpaces] = useState<Space[]>([])
     const [selectedSpace, setSelectedSpace] = useState("");
+
+    const [events, setEvents] = useState<EnergyEvent[]>([]);
+    const ref = useRef<null | number>(null);
 
     const JWT = localStorage.getItem("token");
     const email = localStorage.getItem("email");
@@ -25,6 +35,22 @@ export const Management = () => {
             const spaces = spacesResponse.data
             setSpaces(spaces.spaces)
         })
+
+        ref.current = setInterval(() => {
+            Axios.get(`${dataServiceURL}/users/${email}/spaces`, {
+                headers: {
+                    "Authorization": `Bearer ${JWT}`,
+                    "Content-Type": "application/json"
+                }
+            }).then(res => {
+                if (res.data.length > 0) {
+                    setEvents(res.data)
+                    console.log("UPDATE EVENTS")
+                }
+            })
+        }, 5000)
+
+        return () => clearInterval(ref.current!);
     }, [])
 
     return (
@@ -61,9 +87,8 @@ export const Management = () => {
                                             </div>
                                             <div className="stat-title">Consumption</div>
                                             <div
-                                                className="stat-value text-secondary">{device.consumption} KW/h
+                                                className="stat-value text-secondary">{getLatestConsumptionEvent(events, selectedSpace, device.name)?.toFixed(2)} KW/h
                                             </div>
-
                                         </div>
                                         <div className="stat">
                                             <div className="stat-figure text-secondary">
