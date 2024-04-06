@@ -2,6 +2,7 @@ import {useState} from "react";
 import {toast, ToastContainer} from "react-toastify";
 import {useNavigate} from "react-router-dom";
 import Axios from "axios";
+import {autheticationServiceURL} from "../const.ts";
 
 export const Login = () => {
 
@@ -45,13 +46,13 @@ export const Login = () => {
 
         if (nrError.length == 0) {
             if (!registerMode) {
-                Axios.post("http://localhost:8081/auth/login", {
+                Axios.post(autheticationServiceURL + "/auth/login", {
                     email: email,
                     password: password
                 }).then((res) => {
                     localStorage.setItem("email", res.data.email)
                     localStorage.setItem("token", res.data.token)
-                    navigate("/homepage");
+                    navigate("/dashboard");
                 }).catch((err) => {
                     console.error(err)
                     toast.error('Invalid credentials!', {
@@ -66,13 +67,13 @@ export const Login = () => {
                     })
                 })
             } else {
-                Axios.post("http://localhost:8081/auth/register", {
+                Axios.post(autheticationServiceURL + "/auth/register", {
                     email: email,
                     password: password
                 }).then((res) => {
                     localStorage.setItem("email", res.data.email)
                     localStorage.setItem("token", res.data.token)
-                    navigate("/homepage");
+                    navigate("/dashboard");
                 }).catch((err) => {
                     console.error(err)
                     toast.error('Invalid credentials!', {

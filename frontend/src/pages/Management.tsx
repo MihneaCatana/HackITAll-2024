@@ -1,14 +1,31 @@
-import {useState} from "react";
-import {spaces} from "../data/mockOfficev2.ts";
-import {timeConverter} from "../util/timeConverter.ts";
+import {useEffect, useState} from "react";
+import {Space} from "../types/space.ts";
+import Axios from "axios";
+import {dataServiceURL} from "../const.ts";
 
 export const Management = () => {
-
+    const [spaces, setSpaces] = useState<Space[]>([])
     const [selectedSpace, setSelectedSpace] = useState("");
 
-    function filterBySelected() {
-        return spaces.filter(space => space.spaceName == selectedSpace)[0];
+    const JWT = localStorage.getItem("token");
+    const email = localStorage.getItem("email");
+
+    function filterBySelected(spaces: Space[]): Space {
+        return spaces.filter(space => space.name == selectedSpace)[0];
     }
+
+    useEffect(() => {
+        Axios.get(`${dataServiceURL}/users/${email}`, {
+            headers: {
+                "Authorization": `Bearer ${JWT}`,
+                "Content-Type": "application/json"
+            }
+
+        }).then((spacesResponse) => {
+            const spaces = spacesResponse.data
+            setSpaces(spaces.spaces)
+        })
+    }, [])
 
     return (
         <>
@@ -17,18 +34,17 @@ export const Management = () => {
                 <select className="select select-accent w-full max-w-xs" defaultValue={"Select Space"}
                         onChange={(e) => setSelectedSpace(e.target.value)}>
                     <option disabled>Select Space</option>
-                    {spaces.map((space) => <option key={space.id}>{space.spaceName}</option>)}
+                    {spaces.map((space) => <option key={space.id}>{space.name}</option>)}
                 </select>
             </div>
 
-
             <div className="flex flex-wrap flex-col ">
-                {selectedSpace && filterBySelected().devices && filterBySelected().devices.map(device =>
+                {selectedSpace && filterBySelected(spaces).devices && filterBySelected(spaces).devices?.map(device =>
                     <div key={device.id}>
                         <div className="collapse collapse-arrow bg-base-200 ">
                             <input type="radio" name="my-accordion-2"/>
                             <div className="collapse-title text-xl font-medium">
-                                {device.deviceName}
+                                {device.name}
                             </div>
                             <div className="collapse-content">
                                 <div className="mb-4 mx-4 " key={device.id}>
@@ -47,8 +63,7 @@ export const Management = () => {
                                             <div
                                                 className="stat-value text-secondary">{device.consumption} KW/h
                                             </div>
-                                            <div className="stat-desc">Last
-                                                update: {timeConverter(device.timestamp)}</div>
+
                                         </div>
                                         <div className="stat">
                                             <div className="stat-figure text-secondary">
@@ -73,8 +88,11 @@ export const Management = () => {
 
                     </div>
                 )}
+
             </div>
 
+            {selectedSpace && !filterBySelected(spaces).devices?.length &&
+                <p className="text-center">There are no devices in this space!</p>}
         </>
     )
 }

@@ -2,6 +2,6 @@ import {Device} from "./device.ts";
 
 export interface Space {
     id: number,
-    spaceName: string,
+    name: string,
     devices?: Device[]
 }
