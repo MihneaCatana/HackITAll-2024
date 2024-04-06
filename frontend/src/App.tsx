@@ -1,4 +1,5 @@
 import "./App.css";
+import 'react-toastify/dist/ReactToastify.css';
 import Navbar from "./components/navbar/Navbar.tsx";
 import {Login} from "./pages/Login.tsx";
 import {Subscription} from "./pages/Subscription.tsx";
