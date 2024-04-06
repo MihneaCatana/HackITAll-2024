@@ -12,7 +12,7 @@ function App() {
               <Route path="/homepage" element={<>HOMEPAGE</>} />
               <Route path="/login" element={<Login/>}/>
               <Route path="/test" element={<>TEST</>} />
-              <Route path="/subscription" element={<Subscription/>} />
+              <Route path="/create-space" element={<Subscription/>} />
               <Route path="*" element={<>404 Error</>} />
           </Route>
         </Routes>
