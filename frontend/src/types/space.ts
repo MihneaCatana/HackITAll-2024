@@ -1,7 +1,7 @@
-import { Device } from "./device";
+import {Device} from "./device.ts";
 
 export interface Space {
-    id?: number,
-    officeName: string,
-    devices: Device[]
+    id: number,
+    spaceName: string,
+    devices?: Device[]
 }
