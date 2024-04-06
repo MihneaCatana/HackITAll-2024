@@ -1,8 +1,8 @@
-import { Office } from "./office";
+import {Space} from "./space.ts";
 
 export interface User {
     id: number,
     email: string,
     username: string,
-    offices: Office[]
+    spaces?: Space[]
 }
