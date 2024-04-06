@@ -4,7 +4,7 @@ import { dataServiceURL } from "../const"
 import CreateButton from "../components/buttons/CreateButton"
 
 function CreateSpace() {
-  const { register, handleSubmit } = useForm({
+  const { register, handleSubmit, setValue } = useForm({
     defaultValues: {
         spaceName: ""
     }
@@ -12,7 +12,7 @@ function CreateSpace() {
 
   async function createSpace(data: { spaceName: string }){
     try{
-        // axios.post(`${dataServiceURL}/spaces`, {
+        // axios.post(`${dataServiceURL}/users/email`, {
         //     headers: {
         //         "Authorization": `Bearer ${"test"}`,
         //         "Content-Type": "application/json"
@@ -23,6 +23,7 @@ function CreateSpace() {
         // })
 
         console.log(data.spaceName)
+        setValue("spaceName", "")
     }catch(error){
 
     }

@@ -1,8 +1,8 @@
 import {Space} from "../types/space.ts";
 
-export const spaces: Space = {
+export const spaces: Space[] = [{
     id: 1,
-    spaceName: "Space1",
+    spaceName: "Space 1",
     devices: [
         {
             id: 1,
@@ -20,4 +20,4 @@ export const spaces: Space = {
         }
     ]
 
-}
+}]
