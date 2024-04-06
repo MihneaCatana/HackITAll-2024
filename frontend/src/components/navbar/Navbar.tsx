@@ -33,7 +33,7 @@ function Navbar() {
                     <li className="hover:text-blue-500">Management</li>
                 </Link>
 
-                <Link to={`/configuration`}>
+                <Link to={`/create-space`}>
                     <li className="hover:text-blue-500">Create space</li>    
                 </Link>
 
