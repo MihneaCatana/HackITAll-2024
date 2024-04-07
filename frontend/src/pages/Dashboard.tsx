@@ -10,13 +10,16 @@ import "https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.0.272/jspdf.debug.js"
 
 interface groupedByDevice {
     [key: string]: {
-        deviceName: string,
-        minute: string,
-        consumption: number
-    }[]
+        [key: string]: {
+            minute: string,
+            deviceName: string,
+            consumption: number,
+        }
+    }
 }
 
-function generatePDF(data: { minute: string; consumption: number, deviceName: string; }[], spaceName: string) {
+
+function generatePDF(events: RealtimeData[], spaceName: string) {
     const pdf = new jsPDF({
         orientation: 'p',
         unit: 'mm',
@@ -24,36 +27,60 @@ function generatePDF(data: { minute: string; consumption: number, deviceName: st
         putOnlyUsedFonts: true
     });
 
-    const groupedByDeviceName: groupedByDevice = {}
-
-    for (const event of data) {
-        if (!groupedByDeviceName[event.deviceName]) {
-            groupedByDeviceName[event.deviceName] = [{
-                deviceName: event.deviceName,
-                minute: event.minute,
-                consumption: event.consumption
-            }]
-        } else {
-            groupedByDeviceName[event.deviceName].push({
-                deviceName: event.deviceName,
-                minute: event.minute,
-                consumption: event.consumption
-            })
-        }
-    }
-
     pdf.text("Energy Buddy", 50, 10)
     pdf.text("Email: " + localStorage.getItem("email"), 15, 30);
     pdf.text("Space: " + spaceName, 15, 40)
-    for (const device of Object.values(groupedByDeviceName)) {
-        let index = 0
-        pdf.text(`Device ${index + 1}: ` + device[0].deviceName, 25, 50)
-        for (const event of device) {
-            pdf.text("Minute: " + event.minute + ", Consumption: " + event.consumption.toFixed(2) + " KW", 35, 60 + index * 10)
-            index++
+
+    const devices: string[] = []
+
+    for (const event of events) {
+        if (!devices.includes(event.deviceName)) {
+            devices.push(event.deviceName)
         }
     }
-    // pdf.text(data, 20, 20);
+
+    const groupedByDevice: groupedByDevice = {}
+
+    for (const device of devices) {
+        groupedByDevice[device] = {}
+
+        for (const event of events) {
+            if (event.deviceName === device) {
+                const minutes = new Date(event.date).getMinutes().toString()
+                if (!groupedByDevice[device][minutes]) {
+                    groupedByDevice[device][minutes] = {
+                        deviceName: event.deviceName,
+                        minute: minutes,
+                        consumption: ((event.consumption / 60) / 12)
+                    }
+                } else {
+                    groupedByDevice[device][minutes] = {
+                        deviceName: event.deviceName,
+                        minute: minutes,
+                        consumption: groupedByDevice[device][minutes].consumption + ((event.consumption / 60) / 12)
+                    }
+                }
+            }
+        }
+    }
+
+    console.log(groupedByDevice)
+
+    let y = 50
+    for (const device of devices) {
+        const deviceData = groupedByDevice[device]
+
+        const entriesMinutes = Object.values(deviceData)
+
+        pdf.text(`Device: ${device}`, 15, y)
+        y += 10
+
+        for (const entry of entriesMinutes) {
+            pdf.text(`Minute: ` + entry.minute + ", Consumption: " + entry.consumption.toFixed(2) + " KW", 30, y)
+            y += 10
+        }
+    }
+
     pdf.save('Report_Energy_Buddy.pdf');
 }
 
@@ -226,7 +253,7 @@ function Dashboard() {
 
             <div className="flex justify-end mt-[10vh] px-[15%]">
                 <button className="btn btn-primary"
-                        onClick={() => generatePDF(Object.values(data), selectedSpace!)}>Export report
+                        onClick={() => generatePDF(dashboardData, selectedSpace!)}>Export report
                 </button>
             </div>
         </div>
