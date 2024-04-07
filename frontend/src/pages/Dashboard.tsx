@@ -64,8 +64,6 @@ function generatePDF(events: RealtimeData[], spaceName: string) {
         }
     }
 
-    console.log(groupedByDevice)
-
     let y = 50
     for (const device of devices) {
         const deviceData = groupedByDevice[device]
