@@ -6,6 +6,20 @@ import {BarChart, CartesianGrid, XAxis, YAxis, Tooltip, Legend, Bar} from "recha
 import Axios from "axios";
 import {dataServiceURL} from "../const.ts";
 import {EnergyEvent} from "../types/energyEvent.ts";
+import "https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.0.272/jspdf.debug.js"
+
+function generatePDF(data: []) {
+    const pdf = new jsPDF({
+        orientation: 'p',
+        unit: 'mm',
+        format: 'a5',
+        putOnlyUsedFonts: true
+    });
+    data.map((elem, index) => pdf.text(elem.title, 20 + 10 * index, 20))
+    // pdf.text(data, 20, 20);
+    pdf.save('Demopdf.pdf');
+}
+
 
 interface RealtimeData {
     date: string
@@ -168,6 +182,10 @@ function Dashboard() {
                     <Bar dataKey="consumption" fill="#23c9cf"/>
                 </BarChart>
             </div>
+
+            <button className="btn btn-primary"
+                    onClick={() => generatePDF([{title: "TEST"}, {title: "TEST2"}])}>Export report
+            </button>
         </div>
     )
 }
