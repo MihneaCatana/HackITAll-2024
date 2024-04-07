@@ -6,6 +6,7 @@ import {BarChart, CartesianGrid, XAxis, YAxis, Tooltip, Legend, Bar} from "recha
 import Axios from "axios";
 import {dataServiceURL} from "../const.ts";
 import {EnergyEvent} from "../types/energyEvent.ts";
+import ReactSpeedometer from "react-d3-speedometer/slim"
 import "https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.0.272/jspdf.debug.js"
 
 interface groupedByDevice {
@@ -248,12 +249,53 @@ function Dashboard() {
                     <Bar dataKey="consumption" fill="#23c9cf"/>
                 </BarChart>
             </div>
-
             <div className="flex justify-end mt-[10vh] px-[15%]">
                 <button className="btn btn-primary"
                         onClick={() => generatePDF(dashboardData, selectedSpace!)}>Export report
                 </button>
             </div>
+            <div className="flex justify-center mt-10">
+                {/*{console.log(data)}*/}
+                <ReactSpeedometer
+                    segments={4}
+                    segmentColors={[
+                        "#47c729",
+                        "#eec718",
+                        "#f39b19",
+                        "#e11a1a",
+                    ]}
+                    minValue={0}
+                    maxValue={2}
+                    value={data[new Date().getMinutes()]?.consumption || 0}
+                    customSegmentStops={[0, 0.5, 1, 1.5, 2]}
+                    customSegmentLabels={[
+                        {
+                            text: "A",
+                            position: "INSIDE",
+                            color: "#000"
+                        },
+                        {
+                            text: "B",
+                            position: "INSIDE",
+                            color: "#000",
+                        },
+                        {
+                            text: "C",
+                            position: "INSIDE",
+                            color: "#000",
+                        },
+                        {
+                            text: "D",
+                            position: "INSIDE",
+                            color: "#000",
+                        },
+
+
+                    ]}
+                    currentValueText={"Energy Category for the last minute"}
+                />
+            </div>
+
         </div>
     )
 }
