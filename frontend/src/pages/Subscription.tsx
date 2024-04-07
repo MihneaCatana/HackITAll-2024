@@ -13,9 +13,9 @@ export const Subscription = () => {
                         </h2>
 
                         <ol className="text-center">
-                            <li>Feature 1</li>
-                            <li>Feature 2</li>
-                            <li>Feature 3</li>
+                            <li>1 space allowed</li>
+                            <li>2 devices / space</li>
+                            <li>Dynamic Disable</li>
                         </ol>
                         <p className="text-2xl text-center mb-4 mt-4"><b>Free</b></p>
                         <div className="card-actions justify-end">
@@ -50,7 +50,8 @@ export const Subscription = () => {
                         </div>
                         <div className="flex justify-center">
                             <button
-                                className="btn btn-primary mt-3 bg-stone-400 text-slate-100 border-transparent ">Upgrade
+                                className="btn btn-primary mt-3 bg-stone-400 text-slate-100 border-transparent "
+                                disabled>Already bought
                             </button>
                         </div>
                     </div>
@@ -76,7 +77,8 @@ export const Subscription = () => {
                         </div>
                         <div className="flex justify-center">
                             <button
-                                className="btn btn-primary mt-3 text-slate-100 bg-amber-400 border-transparent">Upgrade
+                                className="btn btn-primary mt-3 text-slate-100 bg-amber-400 border-transparent"
+                                disabled>Already bought
                             </button>
                         </div>
                     </div>
@@ -91,7 +93,7 @@ export const Subscription = () => {
                             <div className="badge badge-accent">Most valuable</div>
                         </h2>
                         <ol className="text-center">
-                            <li>Feature 1</li>
+                            <li>Unlimited spaces and devices</li>
                             <li>Feature 2</li>
                             <li>Feature 3</li>
                         </ol>
@@ -102,7 +104,8 @@ export const Subscription = () => {
                         </div>
                         <div className="flex justify-center">
                             <button
-                                className="btn btn-primary mt-3 bg-stone-900 text-slate-100 border-transparent">Upgrade
+                                className="btn btn-primary mt-3 bg-stone-900 text-slate-100 border-transparent"
+                                disabled>Already bought
                             </button>
                         </div>
                     </div>

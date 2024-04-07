@@ -5,15 +5,16 @@ function Navbar() {
     return (
         <div>
             <div className="drawer">
-                <input id="sidebar" type="checkbox" className="drawer-toggle"/>
+                <input id="sidebar" type="checkbox" className="drawer-toggle "/>
                 <div className="relative drawer-content">
-                    <div className="flex items-center justify-between border-b-2 border-white py-[1vh] px-[5vw]">
+                    <div className="flex items-center justify-between bg-indigo-900  py-[1vh] px-[5vw]">
                         <div className="flex items-center w-auto">
-                            <label htmlFor="sidebar" className="btn top-4 left-4 drawer-button">
-                                <Bars4Icon className="w-12 h-12 text-white cursor-pointer hover:text-gray-300"/>
+                            <label htmlFor="sidebar"
+                                   className="btn top-4 left-4 drawer-button bg-indigo-900 border-none ">
+                                <Bars4Icon className="w-12 h-12  cursor-pointer hover:text-gray-300"/>
                             </label>
 
-                            <h1 className="ml-4 text-2xl font-bold text-right">Energy Buddy</h1>
+                            <h1 className="ml-4 text-2xl font-bold text-right ">Energy Buddy</h1>
                         </div>
                     </div>
 

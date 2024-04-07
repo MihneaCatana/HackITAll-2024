@@ -8,28 +8,67 @@ import {dataServiceURL} from "../const.ts";
 import {EnergyEvent} from "../types/energyEvent.ts";
 import "https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.0.272/jspdf.debug.js"
 
-function generatePDF(data: []) {
+interface groupedByDevice {
+    [key: string]: {
+        deviceName: string,
+        minute: string,
+        consumption: number
+    }[]
+}
+
+function generatePDF(data: { minute: string; consumption: number, deviceName: string; }[], spaceName: string) {
     const pdf = new jsPDF({
         orientation: 'p',
         unit: 'mm',
         format: 'a5',
         putOnlyUsedFonts: true
     });
-    data.map((elem, index) => pdf.text(elem.title, 20 + 10 * index, 20))
+
+    const groupedByDeviceName: groupedByDevice = {}
+
+    for (const event of data) {
+        if (!groupedByDeviceName[event.deviceName]) {
+            groupedByDeviceName[event.deviceName] = [{
+                deviceName: event.deviceName,
+                minute: event.minute,
+                consumption: event.consumption
+            }]
+        } else {
+            groupedByDeviceName[event.deviceName].push({
+                deviceName: event.deviceName,
+                minute: event.minute,
+                consumption: event.consumption
+            })
+        }
+    }
+
+    pdf.text("Energy Buddy", 50, 10)
+    pdf.text("Email: " + localStorage.getItem("email"), 15, 30);
+    pdf.text("Space: " + spaceName, 15, 40)
+    for (const device of Object.values(groupedByDeviceName)) {
+        let index = 0
+        pdf.text(`Device ${index + 1}: ` + device[0].deviceName, 25, 50)
+        for (const event of device) {
+            pdf.text("Minute: " + event.minute + ", Consumption: " + event.consumption.toFixed(2) + " KW", 35, 60 + index * 10)
+            index++
+        }
+    }
     // pdf.text(data, 20, 20);
-    pdf.save('Demopdf.pdf');
+    pdf.save('Report_Energy_Buddy.pdf');
 }
 
 
 interface RealtimeData {
     date: string
     consumption: number,
+    deviceName: string
 }
 
 interface DashboardData {
     [key: string]: {
         minute: string,
-        consumption: number
+        consumption: number,
+        deviceName: string
     },
 }
 
@@ -86,7 +125,8 @@ function Dashboard() {
         const dataPoints = intervalData.map((dataPoint) => {
             return {
                 date: new Date(dataPoint.timestamp).toString(),
-                consumption: dataPoint.consumption
+                consumption: dataPoint.consumption,
+                deviceName: dataPoint.name
             }
         })
         setDashboardData(dataPoints)
@@ -108,12 +148,14 @@ function Dashboard() {
         if (!data[dataPointMinutes]) {
             data[dataPointMinutes] = {
                 minute: dataPointMinutes,
-                consumption: (dataPoint.consumption)
+                consumption: dataPoint.consumption / 720,
+                deviceName: dataPoint.deviceName
             }
         } else {
             data[dataPointMinutes] = {
                 minute: dataPointMinutes,
-                consumption: (data[dataPointMinutes].consumption + dataPoint.consumption)
+                consumption: data[dataPointMinutes].consumption + (dataPoint.consumption / 720),
+                deviceName: dataPoint.deviceName
             }
         }
     }
@@ -140,7 +182,6 @@ function Dashboard() {
                             return <option key={space.id} value={space.name}>{space.name}</option>
                         })}
                     </select>
-                    {/*{console.log(spaces)}*/}
                 </label>
 
                 <div className="w-full max-w-xs mt-2 ml-4 form-control">
@@ -171,7 +212,7 @@ function Dashboard() {
             </div>
 
             <div className="mt-[10vh] flex flex-col items-center">
-                <h1 className="mb-6 text-2xl font-bold">Energy consumption (KW/minute)</h1>
+                <h1 className="mb-6 text-2xl font-bold">Energy consumption (KW/minutes)</h1>
 
                 <BarChart width={730} height={250} data={Object.values(data)}>
                     <CartesianGrid strokeDasharray="3 3"/>
@@ -183,9 +224,11 @@ function Dashboard() {
                 </BarChart>
             </div>
 
-            <button className="btn btn-primary"
-                    onClick={() => generatePDF([{title: "TEST"}, {title: "TEST2"}])}>Export report
-            </button>
+            <div className="flex justify-end mt-[10vh] px-[15%]">
+                <button className="btn btn-primary"
+                        onClick={() => generatePDF(Object.values(data), selectedSpace!)}>Export report
+                </button>
+            </div>
         </div>
     )
 }
