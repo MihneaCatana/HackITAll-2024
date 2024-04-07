@@ -188,7 +188,10 @@ function Dashboard() {
 
     return (
         <div>
-            <div className="flex flex-wrap items-end justify-evenly">
+            <div
+                className="flex flex-wrap items-end justify-evenly p-[1rem] pb-[2.5rem] rounded-2xl bg-[#1e2947]"
+                style={{boxShadow: "6px 14px 37px -10px rgba(0,0,0,0.75)"}}>
+
                 <label className="w-full max-w-xs form-control">
                     <div className="label">
                         <span className="label-text">Select space</span>
@@ -237,25 +240,21 @@ function Dashboard() {
                 </div>
             </div>
 
-            <div className="mt-[10vh] flex flex-col items-center">
-                <h1 className="mb-6 text-2xl font-bold">Energy consumption (KW/minutes)</h1>
+            <div
+                className="mt-[10vh] flex justify-around items-center flex-wrap p-[1rem] pb-[2.5rem] pt-[1.7rem] rounded-2xl  bg-[#1e2947]"
+                style={{boxShadow: "6px 14px 37px -10px rgba(0,0,0,0.75)"}}>
+                <div>
+                    <h1 className="mb-6 ml-14 text-2xl font-bold">Energy consumption (KW/minutes)</h1>
 
-                <BarChart width={730} height={250} data={Object.values(data)}>
-                    <CartesianGrid strokeDasharray="3 3"/>
-                    <XAxis dataKey="minute"/>
-                    <YAxis dataKey="consumption"/>
-                    <Tooltip/>
-                    <Legend/>
-                    <Bar dataKey="consumption" fill="#23c9cf"/>
-                </BarChart>
-            </div>
-            <div className="flex justify-end mt-[10vh] px-[15%]">
-                <button className="btn btn-primary"
-                        onClick={() => generatePDF(dashboardData, selectedSpace!)}>Export report
-                </button>
-            </div>
-            <div className="flex justify-center mt-10">
-                {/*{console.log(data)}*/}
+                    <BarChart width={730} height={250} data={Object.values(data)}>
+                        <CartesianGrid strokeDasharray="3 3"/>
+                        <XAxis dataKey="minute"/>
+                        <YAxis dataKey="consumption"/>
+                        <Tooltip/>
+                        <Legend/>
+                        <Bar dataKey="consumption" fill="#23c9cf"/>
+                    </BarChart>
+                </div>
                 <ReactSpeedometer
                     segments={4}
                     segmentColors={[
@@ -264,6 +263,7 @@ function Dashboard() {
                         "#f39b19",
                         "#e11a1a",
                     ]}
+                    height={250}
                     minValue={0}
                     maxValue={2}
                     value={data[new Date().getMinutes()]?.consumption || 0}
@@ -294,6 +294,13 @@ function Dashboard() {
                     ]}
                     currentValueText={"Energy Category for the last minute"}
                 />
+            </div>
+            <div className="flex justify-center mt-[10vh] px-[15%]">
+                <button className="btn btn-primary"
+                        onClick={() => generatePDF(dashboardData, selectedSpace!)}>Export report
+                </button>
+            </div>
+            <div className="flex justify-center mt-10">
             </div>
 
         </div>
