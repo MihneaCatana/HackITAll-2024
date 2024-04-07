@@ -3,6 +3,7 @@ import {Space} from "../types/space.ts";
 import Axios from "axios";
 import {dataServiceURL} from "../const.ts";
 import {EnergyEvent} from "../types/energyEvent.ts";
+import {toast, ToastContainer} from "react-toastify";
 
 function getLatestConsumptionEvent(events: EnergyEvent[], spaceNameSelected: string, nameDevice: string) {
     const devicesSpace = events.filter(event => event.space === spaceNameSelected);
@@ -45,7 +46,6 @@ export const Management = () => {
             }).then(res => {
                 if (res.data.length > 0) {
                     setEvents(res.data)
-                    console.log("UPDATE EVENTS")
                 }
             })
         }, 5000)
@@ -95,11 +95,21 @@ export const Management = () => {
                                             </div>
                                             <div className="stat-title">Status</div>
                                             <input type="checkbox" className="toggle"
-                                                   defaultChecked={device.status}
-                                                   onChange={(e) => {
-                                                       // SINGLE TIME USE
-                                                       console.log(device.id)
-                                                       console.log(e.target.value)
+                                                   checked={Number.parseFloat(getLatestConsumptionEvent(events, selectedSpace, device.name)?.toFixed(2)) > 0}
+                                                   onChange={() => {
+                                                       Axios.put(`http://localhost:8080/events/${email}/${device.name}`, {status: !(Number.parseFloat(getLatestConsumptionEvent(events, selectedSpace, device.name)?.toFixed(2)) > 0)}).then(() => {
+                                                           toast.success(`The device will be ${!(Number.parseFloat(getLatestConsumptionEvent(events, selectedSpace, device.name)?.toFixed(2)) > 0) ? "activated" : "deactivated"} soon!`, {
+                                                               position: "top-right",
+                                                               autoClose: 5000,
+                                                               hideProgressBar: true,
+                                                               closeOnClick: true,
+                                                               pauseOnHover: true,
+                                                               draggable: false,
+                                                               progress: undefined,
+                                                               theme: "colored",
+                                                           })
+                                                       }).catch(err => console.log(err))
+
                                                    }}/>
                                         </div>
                                     </div>
@@ -110,7 +120,7 @@ export const Management = () => {
 
                         </div>
 
-
+                        <ToastContainer/>
                     </div>
                 )}
 

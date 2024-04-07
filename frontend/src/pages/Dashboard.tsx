@@ -1,5 +1,3 @@
-// import {spaces as DUMMY_SPACES} from "../data/mockOfficev2";
-import {mockDataDashboard} from "../data/mockDevices";
 import {useEffect, useRef, useState} from "react";
 import {Space} from "../types/space";
 import DatePicker from "react-datepicker"
@@ -96,12 +94,12 @@ function Dashboard() {
         if (!data[dataPointMinutes]) {
             data[dataPointMinutes] = {
                 minute: dataPointMinutes,
-                consumption: (dataPoint.consumption) / 60
+                consumption: (dataPoint.consumption)
             }
         } else {
             data[dataPointMinutes] = {
                 minute: dataPointMinutes,
-                consumption: (data[dataPointMinutes].consumption + dataPoint.consumption) / 60
+                consumption: (data[dataPointMinutes].consumption + dataPoint.consumption)
             }
         }
     }
